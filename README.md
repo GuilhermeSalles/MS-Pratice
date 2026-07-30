@@ -345,11 +345,6 @@ class VendaControllerTest {
 }
 ```
 
-```bash
-cd venda-service && ./mvnw test
-cd ../estoque-service && ./mvnw test
-```
-
 ---
 
 ## 🗂️ Estrutura do Repositório
@@ -394,7 +389,7 @@ MS-Pratice/
 
 **Guilherme Baltazar Vericimo de Sales**
 
-- **LinkedIn**: [guilhermebaltazar-v](https://www.linkedin.com/in/guilhermebaltazar-v)
-- **GitHub**: [@GuilhermeSalles](https://github.com/GuilhermeSalles)
+[![LinkedIn](https://img.shields.io/badge/-LinkedIn-%230077B5?style=for-the-badge&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/guilherme-baltazar-0028361a1)
+[![Instagram](https://img.shields.io/badge/-Instagram-%23E4405F?style=for-the-badge&logo=instagram&logoColor=white)](https://instagram.com/yguilhermeb)
 
 ---
