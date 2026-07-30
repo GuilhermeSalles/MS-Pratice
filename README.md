@@ -101,14 +101,12 @@ Numa arquitetura síncrona, se o serviço de estoque sai do ar, toda venda feita
 docker compose stop estoque-service
 
 # 2. Registre 3 vendas com ele fora do ar
-curl -X POST http://localhost:8081/venda -H "Content-Type: application/json" -d '{"id":"B"}'
-curl -X POST http://localhost:8081/venda -H "Content-Type: application/json" -d '{"id":"C"}'
-curl -X POST http://localhost:8081/venda -H "Content-Type: application/json" -d '{"id":"D"}'
+'{"id":"B"}'
+'{"id":"C"}'
+'{"id":"D"}'
 # → HTTP 200 nas três. O produtor não faz ideia de que o consumidor caiu.
 
 # 3. Confira o acúmulo no broker
-docker exec kafka /opt/kafka/bin/kafka-consumer-groups.sh \
-  --bootstrap-server localhost:29092 --describe --group estoque-group
 ```
 
 ```
@@ -120,8 +118,6 @@ O **lag de 3** é a métrica que traduz o problema: existem 3 mensagens publicad
 
 ```bash
 # 4. Suba o consumidor de volta
-docker compose start estoque-service
-docker compose logs -f estoque-service
 ```
 
 ```
