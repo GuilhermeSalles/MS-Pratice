@@ -1,0 +1,648 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BFF — Backend For Frontend · Guia Interativo</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#0F1B2D;
+    --surface:#16283F;
+    --surface-2:#1B3050;
+    --grid:#1E3A5F;
+    --line:#284B78;
+    --text:#E8EEF5;
+    --muted:#8AA2BD;
+    --amber:#F5A623;
+    --amber-soft:rgba(245,166,35,.14);
+    --cyan:#4FD1C5;
+    --cyan-soft:rgba(79,209,197,.12);
+    --coral:#FF6B5B;
+    --green:#5BD98A;
+    --red:#FF6B5B;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{
+    background:
+      linear-gradient(transparent 96%, var(--grid) 96%) 0 0/28px 28px,
+      linear-gradient(90deg, transparent 96%, var(--grid) 96%) 0 0/28px 28px,
+      var(--bg);
+    color:var(--text);
+    font-family:'Inter',sans-serif;
+    line-height:1.6;
+    min-height:100vh;
+  }
+  .wrap{max-width:940px;margin:0 auto;padding:32px 20px 80px}
+
+  /* Header */
+  header{margin-bottom:28px}
+  .eyebrow{
+    font-family:'JetBrains Mono',monospace;
+    font-size:12px;letter-spacing:.18em;text-transform:uppercase;
+    color:var(--cyan);margin-bottom:10px;
+  }
+  h1{
+    font-family:'Space Grotesk',sans-serif;
+    font-weight:700;font-size:clamp(30px,6vw,46px);
+    line-height:1.05;letter-spacing:-.02em;
+  }
+  h1 .amp{color:var(--amber)}
+  .sub{color:var(--muted);margin-top:12px;max-width:640px;font-size:15px}
+  .tag{
+    display:inline-block;margin-top:14px;
+    font-family:'JetBrains Mono',monospace;font-size:11px;
+    color:var(--amber);background:var(--amber-soft);
+    border:1px solid rgba(245,166,35,.3);border-radius:999px;
+    padding:4px 12px;letter-spacing:.04em;
+  }
+
+  /* Tabs */
+  nav.tabs{
+    display:flex;flex-wrap:wrap;gap:6px;margin:26px 0 24px;
+    border-bottom:1px solid var(--line);padding-bottom:0;
+  }
+  .tab{
+    font-family:'Space Grotesk',sans-serif;font-weight:500;font-size:14px;
+    color:var(--muted);background:none;border:none;cursor:pointer;
+    padding:11px 15px;border-bottom:2px solid transparent;
+    transition:color .15s, border-color .15s;
+    display:flex;align-items:center;gap:7px;
+  }
+  .tab .n{font-family:'JetBrains Mono',monospace;font-size:11px;opacity:.6}
+  .tab:hover{color:var(--text)}
+  .tab.active{color:var(--amber);border-bottom-color:var(--amber)}
+
+  section.panel{display:none;animation:fade .35s ease}
+  section.panel.active{display:block}
+  @keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+
+  h2{
+    font-family:'Space Grotesk',sans-serif;font-weight:600;
+    font-size:23px;letter-spacing:-.01em;margin:6px 0 4px;
+  }
+  h3{
+    font-family:'Space Grotesk',sans-serif;font-weight:600;
+    font-size:16px;margin:22px 0 8px;color:var(--text);
+  }
+  p{color:var(--text);margin:10px 0;font-size:15px}
+  p.lead{color:var(--muted);font-size:15px}
+  strong{color:#fff;font-weight:600}
+  .amber{color:var(--amber)}
+  .cyan{color:var(--cyan)}
+
+  .card{
+    background:var(--surface);border:1px solid var(--line);
+    border-radius:14px;padding:20px 22px;margin:16px 0;
+  }
+  .card.accent{border-left:3px solid var(--amber)}
+  .card.cyan-accent{border-left:3px solid var(--cyan)}
+
+  ul.clean{list-style:none;margin:10px 0}
+  ul.clean li{position:relative;padding-left:22px;margin:8px 0;font-size:14.5px}
+  ul.clean li::before{
+    content:'';position:absolute;left:2px;top:9px;
+    width:7px;height:7px;border-radius:2px;background:var(--cyan);
+  }
+  ul.clean li.x::before{background:var(--red)}
+  ul.clean li.ok::before{background:var(--green)}
+
+  /* Interactive layers diagram */
+  .diagram{
+    background:
+      radial-gradient(circle at 20% 0%, rgba(79,209,197,.06), transparent 40%),
+      var(--surface);
+    border:1px solid var(--line);border-radius:16px;
+    padding:26px 20px;margin:18px 0;
+  }
+  .diag-hint{
+    text-align:center;font-family:'JetBrains Mono',monospace;
+    font-size:12px;color:var(--muted);margin-bottom:20px;
+  }
+  .layer-label{
+    font-family:'JetBrains Mono',monospace;font-size:11px;
+    letter-spacing:.14em;text-transform:uppercase;color:var(--muted);
+    margin:0 0 10px 4px;
+  }
+  .row{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-bottom:8px}
+  .node{
+    background:var(--surface-2);border:1.5px solid var(--line);
+    border-radius:12px;padding:14px 10px;text-align:center;
+    min-width:120px;flex:1;max-width:180px;cursor:pointer;
+    transition:all .25s;position:relative;
+  }
+  .node .ic{font-size:22px;display:block;margin-bottom:4px}
+  .node .name{font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:13.5px}
+  .node .role{font-size:11px;color:var(--muted);margin-top:2px}
+  .node.client:hover{border-color:var(--cyan);transform:translateY(-2px)}
+  .node.client.sel{border-color:var(--cyan);background:var(--cyan-soft);box-shadow:0 0 0 1px var(--cyan)}
+  .node.bff{border-style:dashed}
+  .node.bff.lit{border-color:var(--amber);background:var(--amber-soft);border-style:solid;box-shadow:0 0 18px rgba(245,166,35,.25)}
+  .node.ms.lit{border-color:var(--cyan);background:var(--cyan-soft)}
+  .connector{text-align:center;color:var(--line);font-size:18px;line-height:1;margin:2px 0;transition:color .25s}
+  .connector.lit{color:var(--amber)}
+  .explain{
+    margin-top:18px;background:var(--bg);border:1px dashed var(--line);
+    border-radius:12px;padding:16px 18px;min-height:64px;font-size:14px;
+  }
+  .explain .t{font-family:'Space Grotesk',sans-serif;font-weight:600;color:var(--amber);margin-bottom:4px;display:block}
+
+  /* Code blocks */
+  .code-head{
+    display:flex;align-items:center;gap:8px;
+    font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--muted);
+    background:var(--surface-2);border:1px solid var(--line);border-bottom:none;
+    border-radius:10px 10px 0 0;padding:9px 14px;
+  }
+  .code-head .dot{width:9px;height:9px;border-radius:50%;background:var(--coral)}
+  .code-head .dot:nth-child(2){background:var(--amber)}
+  .code-head .dot:nth-child(3){background:var(--green)}
+  .code-head .fn{margin-left:6px}
+  pre{
+    background:#0B1524;border:1px solid var(--line);border-radius:0 0 10px 10px;
+    padding:16px 18px;overflow-x:auto;margin:0 0 18px;
+  }
+  code{font-family:'JetBrains Mono',monospace;font-size:13px;line-height:1.7}
+  .kw{color:#FF9E7A}.an{color:var(--amber)}.st{color:#9BE8A0}.cm{color:#5B7290;font-style:italic}
+  .ty{color:var(--cyan)}.fn2{color:#E8C77A}.nm{color:var(--text)}
+
+  /* Quiz */
+  .quiz-intro{text-align:center;padding:8px 0 4px}
+  .q{
+    background:var(--surface);border:1px solid var(--line);
+    border-radius:14px;padding:20px 22px;margin:14px 0;
+  }
+  .q .qnum{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--cyan);letter-spacing:.1em}
+  .q .qtext{font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:16px;margin:6px 0 14px}
+  .opt{
+    display:block;width:100%;text-align:left;background:var(--surface-2);
+    border:1.5px solid var(--line);border-radius:10px;padding:12px 15px;
+    margin:8px 0;cursor:pointer;color:var(--text);font-size:14px;
+    font-family:'Inter',sans-serif;transition:all .15s;
+  }
+  .opt:hover:not(:disabled){border-color:var(--cyan)}
+  .opt:disabled{cursor:default}
+  .opt.correct{border-color:var(--green);background:rgba(91,217,138,.12)}
+  .opt.wrong{border-color:var(--red);background:rgba(255,107,91,.1)}
+  .opt .mark{float:right;font-weight:700}
+  .feedback{
+    margin-top:10px;padding:12px 15px;border-radius:10px;font-size:13.5px;
+    background:var(--bg);border:1px dashed var(--line);display:none;
+  }
+  .feedback.show{display:block}
+  .feedback.ok{border-color:var(--green)}
+  .feedback.no{border-color:var(--red)}
+  .scorebar{
+    position:sticky;bottom:16px;margin-top:22px;
+    background:var(--surface-2);border:1px solid var(--amber);
+    border-radius:12px;padding:14px 20px;text-align:center;
+    font-family:'Space Grotesk',sans-serif;font-weight:600;
+    box-shadow:0 10px 30px rgba(0,0,0,.35);
+  }
+  .scorebar .big{color:var(--amber);font-size:20px}
+
+  .pill{
+    display:inline-block;font-family:'JetBrains Mono',monospace;font-size:11px;
+    padding:3px 9px;border-radius:6px;margin:2px 3px 2px 0;
+  }
+  .pill.c{background:var(--cyan-soft);color:var(--cyan);border:1px solid rgba(79,209,197,.3)}
+  .pill.a{background:var(--amber-soft);color:var(--amber);border:1px solid rgba(245,166,35,.3)}
+
+  .footer-note{
+    margin-top:30px;text-align:center;font-size:13px;color:var(--muted);
+    font-family:'JetBrains Mono',monospace;
+  }
+  @media (max-width:560px){
+    .node{min-width:96px}
+    .tab{padding:10px 11px;font-size:13px}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="eyebrow">Prep PicPay · Java Pleno · Cobrança</div>
+    <h1>BFF <span class="amp">·</span> Backend For Frontend</h1>
+    <p class="sub">A camada que fica entre o app e os microserviços. Um backend feito sob medida pra cada tipo de frontend — que agrega chamadas e devolve tudo pronto.</p>
+    <span class="tag">clica nos frontends do diagrama pra ver o fluxo</span>
+  </header>
+
+  <nav class="tabs" id="tabs">
+    <button class="tab active" data-tab="0"><span class="n">01</span> Conceito</button>
+    <button class="tab" data-tab="1"><span class="n">02</span> Camadas</button>
+    <button class="tab" data-tab="2"><span class="n">03</span> Código Spring</button>
+    <button class="tab" data-tab="3"><span class="n">04</span> Armadilhas</button>
+    <button class="tab" data-tab="4"><span class="n">05</span> Quiz</button>
+  </nav>
+
+  <!-- ============ 01 CONCEITO ============ -->
+  <section class="panel active" data-panel="0">
+    <h2>O que é, em uma frase</h2>
+    <div class="card accent">
+      <p style="margin-top:0"><strong>BFF é uma camada de backend dedicada a um tipo de frontend.</strong> Em vez de web, mobile e TV conversarem direto com os mesmos microserviços, cada frontend ganha um backend sob medida que <span class="amber">agrega</span>, <span class="amber">filtra</span> e <span class="amber">formata</span> os dados no jeito que aquela tela precisa.</p>
+    </div>
+
+    <h3>O problema que ele resolve</h3>
+    <p class="lead">Uma tela de "detalhe da cobrança" precisa de dados que moram em 3 microserviços diferentes: dados do cliente, situação da dívida e histórico de pagamentos. Sem BFF, o app faria 3 chamadas e juntaria tudo no navegador — lógica de orquestração vazando pro frontend.</p>
+
+    <div class="card cyan-accent">
+      <p style="margin-top:0"><strong>Com BFF, o app faz 1 chamada só.</strong></p>
+      <ul class="clean">
+        <li>O frontend chama <code style="color:var(--cyan)">GET /cobranca/123</code> no BFF</li>
+        <li>O BFF chama os 3 microserviços internamente, em paralelo se der</li>
+        <li>O BFF junta tudo num único DTO no formato exato da tela</li>
+        <li>Devolve pronto — o app só renderiza, não orquestra nada</li>
+      </ul>
+    </div>
+
+    <h3>Por que "um por frontend"?</h3>
+    <p class="lead">Porque cada cliente tem necessidade diferente — e é aqui que a maioria erra na entrevista:</p>
+    <ul class="clean">
+      <li><strong>Mobile</strong> quer resposta enxuta pra economizar dados e bateria</li>
+      <li><strong>Web</strong> pode carregar mais detalhes de uma vez</li>
+      <li><strong>Parceiro/TV</strong> tem contrato e segurança próprios</li>
+    </ul>
+    <p class="lead">Um BFF por frontend serve cada um sob medida, sem inchar uma API genérica que tenta agradar todo mundo e não agrada ninguém.</p>
+
+    <div class="card">
+      <span class="layer-label">Frase pronta pra soltar na técnica</span>
+      <p style="margin:6px 0 0;font-style:italic;color:#fff">"BFF é uma camada de backend dedicada a cada tipo de cliente. Ela agrega chamadas de vários microserviços e devolve a resposta já no formato ideal pra aquele frontend, evitando que o app precise orquestrar várias chamadas e tratar dados que não usa."</p>
+    </div>
+
+    <h3>BFF ≠ API Gateway (pegadinha comum)</h3>
+    <div class="card">
+      <p style="margin-top:0"><span class="pill a">BFF</span> Conhece a <strong>tela</strong>. Agrega e formata dados pra um frontend específico. Tem lógica de apresentação.</p>
+      <p style="margin-bottom:0"><span class="pill c">API Gateway</span> Genérico. Cuida de <strong>roteamento, auth, rate limit, TLS</strong> pra todo mundo. Não sabe o que a tela precisa.</p>
+      <p style="color:var(--muted);font-size:13.5px;margin-bottom:0">Na prática coexistem: o Gateway é a porta de entrada, e atrás dele vivem os BFFs.</p>
+    </div>
+  </section>
+
+  <!-- ============ 02 CAMADAS ============ -->
+  <section class="panel" data-panel="1">
+    <h2>As camadas, na prática</h2>
+    <p class="lead">Clica em um <span class="cyan">frontend</span> pra acender o caminho que a requisição percorre até os microserviços.</p>
+
+    <div class="diagram">
+      <div class="diag-hint">▼ escolha um cliente ▼</div>
+
+      <div class="layer-label">Frontends (clientes)</div>
+      <div class="row">
+        <div class="node client" data-c="web">
+          <span class="ic">🖥️</span><div class="name">Web</div><div class="role">React SPA</div>
+        </div>
+        <div class="node client" data-c="mobile">
+          <span class="ic">📱</span><div class="name">Mobile</div><div class="role">app iOS/Android</div>
+        </div>
+        <div class="node client" data-c="parceiro">
+          <span class="ic">🤝</span><div class="name">Parceiro</div><div class="role">integração B2B</div>
+        </div>
+      </div>
+
+      <div class="connector" id="conn1">│</div>
+
+      <div class="layer-label">Camada BFF (uma por frontend)</div>
+      <div class="row">
+        <div class="node bff" data-b="web"><span class="ic">⚙️</span><div class="name">BFF Web</div><div class="role">DTO rico</div></div>
+        <div class="node bff" data-b="mobile"><span class="ic">⚙️</span><div class="name">BFF Mobile</div><div class="role">DTO enxuto</div></div>
+        <div class="node bff" data-b="parceiro"><span class="ic">⚙️</span><div class="name">BFF Parceiro</div><div class="role">contrato fixo</div></div>
+      </div>
+
+      <div class="connector" id="conn2">│</div>
+
+      <div class="layer-label">Microserviços (domínio · compartilhados)</div>
+      <div class="row">
+        <div class="node ms" data-m><span class="ic">👤</span><div class="name">Clientes</div></div>
+        <div class="node ms" data-m><span class="ic">💰</span><div class="name">Cobrança</div></div>
+        <div class="node ms" data-m><span class="ic">📜</span><div class="name">Pagamentos</div></div>
+      </div>
+
+      <div class="explain" id="explain">
+        <span class="t">Como funciona</span>
+        Cada frontend fala <strong>só com o seu BFF</strong>. Os microserviços de domínio (Clientes, Cobrança, Pagamentos) são compartilhados — o BFF é quem monta a resposta certa pra cada tela. Clica num cliente acima.
+      </div>
+    </div>
+
+    <h3>O que fica em cada camada</h3>
+    <div class="card">
+      <p style="margin-top:0"><span class="pill c">Frontend</span> Só renderiza. Faz 1 chamada e mostra. Zero orquestração.</p>
+      <p><span class="pill a">BFF</span> Agrega N chamadas, trata erro parcial, monta o DTO da tela, cuida de auth do cliente. <strong>Lógica de apresentação</strong> — nunca regra de negócio de domínio.</p>
+      <p style="margin-bottom:0"><span class="pill c">Microserviço</span> Dono da regra de negócio e dos dados daquele domínio. Não sabe que existe BFF nem tela.</p>
+    </div>
+
+    <div class="card accent">
+      <span class="layer-label">Regra de ouro</span>
+      <p style="margin:6px 0 0">Regra de negócio <strong>não</strong> mora no BFF. Se você começar a colocar cálculo de juros da dívida no BFF, isso é sinal de que devia estar no microserviço de Cobrança. O BFF orquestra e formata — ele não decide.</p>
+    </div>
+  </section>
+
+  <!-- ============ 03 CÓDIGO ============ -->
+  <section class="panel" data-panel="2">
+    <h2>Como isso vira código em Spring</h2>
+    <p class="lead">Um BFF é, na essência, um <strong>controller que chama vários clients e monta um DTO</strong>. Simples assim. Segue o esqueleto de um BFF de Cobrança.</p>
+
+    <h3>1 · O DTO da tela (o que o frontend recebe)</h3>
+    <div class="code-head"><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="fn">CobrancaDetalheDTO.java</span></div>
+    <pre><code><span class="cm">// Formato EXATO que a tela precisa — nem mais, nem menos</span>
+<span class="kw">public record</span> <span class="ty">CobrancaDetalheDTO</span>(
+    <span class="ty">String</span> <span class="nm">nomeCliente</span>,
+    <span class="ty">String</span> <span class="nm">situacao</span>,
+    <span class="ty">BigDecimal</span> <span class="nm">valorAtualizado</span>,
+    <span class="ty">List</span>&lt;<span class="ty">PagamentoResumoDTO</span>&gt; <span class="nm">ultimosPagamentos</span>
+) {}</code></pre>
+
+    <h3>2 · Os clients (falam com os microserviços)</h3>
+    <div class="code-head"><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="fn">ClienteClient.java · Feign</span></div>
+    <pre><code><span class="an">@FeignClient</span>(name = <span class="st">"clientes-service"</span>)
+<span class="kw">public interface</span> <span class="ty">ClienteClient</span> {
+
+    <span class="an">@GetMapping</span>(<span class="st">"/clientes/{id}"</span>)
+    <span class="ty">ClienteDTO</span> <span class="fn2">buscarPorId</span>(<span class="an">@PathVariable</span> <span class="ty">String</span> <span class="nm">id</span>);
+}
+<span class="cm">// idem para CobrancaClient e PagamentoClient</span></code></pre>
+
+    <h3>3 · O BFF de verdade — o controller que agrega</h3>
+    <div class="code-head"><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="fn">CobrancaBffController.java</span></div>
+    <pre><code><span class="an">@RestController</span>
+<span class="an">@RequestMapping</span>(<span class="st">"/bff/web/cobranca"</span>)
+<span class="an">@RequiredArgsConstructor</span>
+<span class="kw">public class</span> <span class="ty">CobrancaBffController</span> {
+
+    <span class="kw">private final</span> <span class="ty">ClienteClient</span> <span class="nm">clienteClient</span>;
+    <span class="kw">private final</span> <span class="ty">CobrancaClient</span> <span class="nm">cobrancaClient</span>;
+    <span class="kw">private final</span> <span class="ty">PagamentoClient</span> <span class="nm">pagamentoClient</span>;
+
+    <span class="an">@GetMapping</span>(<span class="st">"/{id}"</span>)
+    <span class="kw">public</span> <span class="ty">CobrancaDetalheDTO</span> <span class="fn2">detalhe</span>(<span class="an">@PathVariable</span> <span class="ty">String</span> <span class="nm">id</span>) {
+
+        <span class="cm">// 1. Agrega — chama os 3 microserviços</span>
+        <span class="ty">CobrancaDTO</span> <span class="nm">cob</span>  = <span class="nm">cobrancaClient</span>.<span class="fn2">buscar</span>(<span class="nm">id</span>);
+        <span class="ty">ClienteDTO</span> <span class="nm">cli</span>  = <span class="nm">clienteClient</span>.<span class="fn2">buscarPorId</span>(<span class="nm">cob</span>.<span class="fn2">clienteId</span>());
+        <span class="ty">List</span>&lt;<span class="ty">PagamentoDTO</span>&gt; <span class="nm">pags</span> =
+            <span class="nm">pagamentoClient</span>.<span class="fn2">ultimos</span>(<span class="nm">id</span>, <span class="an">3</span>);
+
+        <span class="cm">// 2. Formata — monta o DTO exato da tela</span>
+        <span class="kw">return new</span> <span class="ty">CobrancaDetalheDTO</span>(
+            <span class="nm">cli</span>.<span class="fn2">nome</span>(),
+            <span class="nm">cob</span>.<span class="fn2">situacao</span>(),
+            <span class="nm">cob</span>.<span class="fn2">valorAtualizado</span>(),
+            <span class="nm">pags</span>.<span class="fn2">stream</span>().<span class="fn2">map</span>(<span class="ty">PagamentoResumoDTO</span>::<span class="fn2">from</span>).<span class="fn2">toList</span>()
+        );
+    }
+}</code></pre>
+
+    <div class="card cyan-accent">
+      <p style="margin-top:0"><strong>Repara no que o BFF faz e no que ele NÃO faz:</strong></p>
+      <ul class="clean">
+        <li class="ok"><strong>Faz:</strong> agrega 3 chamadas, monta 1 DTO sob medida pra tela web (<code style="color:var(--cyan)">/bff/web/...</code>)</li>
+        <li class="ok"><strong>Faz:</strong> um BFF mobile teria outra rota e devolveria um DTO mais enxuto</li>
+        <li class="x"><strong>Não faz:</strong> cálculo de juros, decisão de negociação — isso é do microserviço de Cobrança</li>
+      </ul>
+    </div>
+
+    <h3>Detalhe pra brilhar: chamadas em paralelo</h3>
+    <p class="lead">Na entrevista, se perguntarem "e se os 3 microserviços forem lentos?" — a resposta madura é fazer as chamadas independentes <strong>em paralelo</strong> com <code style="color:var(--cyan)">CompletableFuture</code> (ou WebClient reativo), em vez de uma esperando a outra. Só cuidado: cliente e cobrança aqui têm dependência (precisa do clienteId), então nem tudo paraleliza.</p>
+  </section>
+
+  <!-- ============ 04 ARMADILHAS ============ -->
+  <section class="panel" data-panel="3">
+    <h2>Armadilhas & o que falam contra BFF</h2>
+    <p class="lead">Saber os contras é o que separa "decorei" de "entendi". O entrevistador adora perguntar o lado ruim.</p>
+
+    <h3>⚠️ Duplicação de código</h3>
+    <div class="card">
+      <p style="margin:0">Se você tem BFF web, mobile e parceiro, muita lógica de chamada se repete. <strong>Mitigação:</strong> extrair a orquestração comum pra uma lib/módulo compartilhado, deixando no BFF só o que é específico de cada tela.</p>
+    </div>
+
+    <h3>⚠️ Mais uma coisa pra manter e deployar</h3>
+    <div class="card">
+      <p style="margin:0">Cada BFF é um serviço a mais: deploy, monitoramento, on-call. <strong>Trade-off:</strong> você troca complexidade no frontend por mais serviços no backend. Vale quando os frontends são realmente diferentes; não vale se você tem um só cliente.</p>
+    </div>
+
+    <h3>⚠️ Risco de virar "God service"</h3>
+    <div class="card accent">
+      <p style="margin:0">A tentação de jogar regra de negócio no BFF é enorme. Quando isso acontece, ele incha e vira um monólito disfarçado. <strong>Disciplina:</strong> BFF orquestra e formata. Regra de domínio fica no microserviço. Sempre.</p>
+    </div>
+
+    <h3>⚠️ Falha parcial</h3>
+    <div class="card">
+      <p style="margin-top:0">Se o BFF chama 3 microserviços e 1 cai, o que acontece? Você <strong>não</strong> pode deixar a tela toda quebrar por causa de um pedaço secundário.</p>
+      <ul class="clean">
+        <li>Use <strong>timeout</strong> em cada chamada</li>
+        <li>Use <strong>circuit breaker</strong> (Resilience4j) pra não travar esperando um serviço morto</li>
+        <li>Degrade com elegância: devolve o essencial e um campo vazio pro que falhou, se a tela permitir</li>
+      </ul>
+    </div>
+
+    <div class="card cyan-accent">
+      <span class="layer-label">Resposta modelo se perguntarem "quando NÃO usar BFF?"</span>
+      <p style="margin:6px 0 0;font-style:italic;color:#fff">"Quando existe um só tipo de frontend, o BFF vira overhead — uma API bem modelada resolve. BFF faz sentido quando os clientes têm necessidades divergentes o suficiente pra justificar backends separados; caso contrário, é complexidade sem retorno."</p>
+    </div>
+  </section>
+
+  <!-- ============ 05 QUIZ ============ -->
+  <section class="panel" data-panel="4">
+    <div class="quiz-intro">
+      <h2>Quiz — 8 perguntas</h2>
+      <p class="lead">Responde tudo e vê a explicação de cada uma. No fim, sua nota.</p>
+    </div>
+    <div id="quiz"></div>
+    <div class="scorebar" id="scorebar" style="display:none">
+      Sua nota: <span class="big" id="scoreval">0/8</span> <span id="scoremsg"></span>
+    </div>
+  </section>
+
+  <div class="footer-note">// feito pra sua técnica na PicPay · manda a nota do quiz que a gente ataca o próximo tema</div>
+</div>
+
+<script>
+/* ---------- Tabs ---------- */
+const tabs = document.querySelectorAll('.tab');
+const panels = document.querySelectorAll('.panel');
+tabs.forEach(t=>t.addEventListener('click',()=>{
+  tabs.forEach(x=>x.classList.remove('active'));
+  panels.forEach(x=>x.classList.remove('active'));
+  t.classList.add('active');
+  document.querySelector(`.panel[data-panel="${t.dataset.tab}"]`).classList.add('active');
+  window.scrollTo({top:0,behavior:'smooth'});
+}));
+
+/* ---------- Interactive layers ---------- */
+const clients = document.querySelectorAll('.node.client');
+const bffs = document.querySelectorAll('.node.bff');
+const ms = document.querySelectorAll('.node.ms');
+const conn1 = document.getElementById('conn1');
+const conn2 = document.getElementById('conn2');
+const explain = document.getElementById('explain');
+
+const info = {
+  web:{t:'BFF Web em ação',d:'O <b>React SPA</b> chama só o <b class="amber">BFF Web</b>. Ele busca em Clientes + Cobrança + Pagamentos e devolve um <b>DTO rico</b>, com todos os detalhes que a tela grande do desktop aproveita.'},
+  mobile:{t:'BFF Mobile em ação',d:'O <b>app</b> chama o <b class="amber">BFF Mobile</b>. Mesmos microserviços, mas o DTO volta <b>enxuto</b> — só os campos que cabem na tela pequena, economizando dados e bateria.'},
+  parceiro:{t:'BFF Parceiro em ação',d:'A <b>integração B2B</b> chama o <b class="amber">BFF Parceiro</b>, que expõe um <b>contrato fixo e versionado</b>, com auth e formato próprios — o parceiro nunca toca nos microserviços direto.'}
+};
+
+function reset(){
+  bffs.forEach(b=>b.classList.remove('lit'));
+  ms.forEach(m=>m.classList.remove('lit'));
+  conn1.classList.remove('lit');conn2.classList.remove('lit');
+}
+clients.forEach(c=>c.addEventListener('click',()=>{
+  clients.forEach(x=>x.classList.remove('sel'));
+  c.classList.add('sel');
+  reset();
+  const key=c.dataset.c;
+  document.querySelector(`.node.bff[data-b="${key}"]`).classList.add('lit');
+  ms.forEach(m=>m.classList.add('lit'));
+  conn1.classList.add('lit');conn2.classList.add('lit');
+  explain.innerHTML=`<span class="t">${info[key].t}</span>${info[key].d}`;
+}));
+
+/* ---------- Quiz ---------- */
+const questions=[
+  {
+    q:'Qual a definição mais precisa de BFF?',
+    opts:[
+      'Um backend genérico que serve todos os frontends igualmente',
+      'Uma camada de backend dedicada a um tipo específico de frontend',
+      'Um microserviço que guarda regra de negócio de vários domínios',
+      'Um proxy que só faz roteamento e autenticação'
+    ],
+    correct:1,
+    exp:'BFF é dedicado a um tipo de frontend. O genérico seria uma API comum; o de roteamento/auth é o API Gateway.'
+  },
+  {
+    q:'Qual é a principal responsabilidade do BFF numa requisição?',
+    opts:[
+      'Calcular a regra de negócio do domínio',
+      'Persistir os dados no banco',
+      'Agregar chamadas de vários microserviços e formatar o DTO da tela',
+      'Fazer o deploy dos microserviços'
+    ],
+    correct:2,
+    exp:'Agregar + formatar é a essência. Regra de negócio e persistência ficam nos microserviços de domínio.'
+  },
+  {
+    q:'Qual a diferença entre BFF e API Gateway?',
+    opts:[
+      'São exatamente a mesma coisa',
+      'O Gateway conhece a tela; o BFF só roteia',
+      'O BFF conhece a tela e agrega dados; o Gateway é genérico (roteamento, auth, rate limit)',
+      'O BFF só existe no frontend'
+    ],
+    correct:2,
+    exp:'BFF tem lógica de apresentação e sabe o que a tela precisa. Gateway é infra genérica. Coexistem: Gateway na porta, BFFs atrás.'
+  },
+  {
+    q:'Por que ter um BFF por frontend em vez de um só?',
+    opts:[
+      'Porque é mais barato ter mais serviços',
+      'Porque cada cliente tem necessidades diferentes (mobile enxuto, web detalhado, parceiro com contrato)',
+      'Porque o Kafka exige um BFF por tópico',
+      'Porque o Spring não deixa reusar controller'
+    ],
+    correct:1,
+    exp:'A razão é servir cada frontend sob medida, sem inchar uma API genérica que não agrada ninguém.'
+  },
+  {
+    q:'O que NUNCA deve morar no BFF?',
+    opts:[
+      'A agregação de chamadas',
+      'A formatação do DTO da tela',
+      'A regra de negócio do domínio (ex: cálculo de juros da dívida)',
+      'A autenticação específica do cliente'
+    ],
+    correct:2,
+    exp:'Regra de negócio de domínio fica no microserviço. Se colocar no BFF, ele incha e vira monólito disfarçado.'
+  },
+  {
+    q:'O BFF chama 3 microserviços e um deles cai. Qual a abordagem madura?',
+    opts:[
+      'Deixar a tela inteira quebrar',
+      'Timeout + circuit breaker e degradar com elegância, devolvendo o essencial',
+      'Tentar infinitamente até o serviço voltar',
+      'Remover o microserviço do fluxo permanentemente'
+    ],
+    correct:1,
+    exp:'Timeout e circuit breaker (Resilience4j) evitam travar; a tela recebe o essencial mesmo com falha parcial.'
+  },
+  {
+    q:'Quando NÃO faz sentido usar BFF?',
+    opts:[
+      'Quando há vários frontends muito diferentes',
+      'Quando existe um só tipo de frontend — vira overhead',
+      'Quando você usa microserviços',
+      'Quando você usa Spring Boot'
+    ],
+    correct:1,
+    exp:'Com um frontend só, uma API bem modelada resolve. BFF é complexidade sem retorno nesse caso.'
+  },
+  {
+    q:'Na implementação Spring, o BFF é essencialmente...',
+    opts:[
+      'Uma entidade JPA com @Entity',
+      'Um controller que injeta vários clients, agrega e devolve um DTO',
+      'Um consumer Kafka que grava no banco',
+      'Um arquivo de configuração YAML'
+    ],
+    correct:1,
+    exp:'Na prática: @RestController + Feign/WebClients + montagem de um DTO sob medida. Simples e poderoso.'
+  }
+];
+
+const quizEl=document.getElementById('quiz');
+let answered=0, score=0;
+
+questions.forEach((item,i)=>{
+  const q=document.createElement('div');q.className='q';
+  q.innerHTML=`<div class="qnum">PERGUNTA ${String(i+1).padStart(2,'0')}</div>
+    <div class="qtext">${item.q}</div>`;
+  item.opts.forEach((o,j)=>{
+    const b=document.createElement('button');b.className='opt';b.textContent=o;
+    b.onclick=()=>choose(q,item,i,j,b);
+    q.appendChild(b);
+  });
+  const fb=document.createElement('div');fb.className='feedback';fb.dataset.fb=i;
+  q.appendChild(fb);
+  quizEl.appendChild(q);
+});
+
+function choose(qEl,item,i,j,btn){
+  if(qEl.dataset.done)return;
+  qEl.dataset.done='1';
+  answered++;
+  const opts=qEl.querySelectorAll('.opt');
+  opts.forEach((o,k)=>{
+    o.disabled=true;
+    if(k===item.correct){o.classList.add('correct');o.querySelector('.mark')||o.insertAdjacentHTML('beforeend','<span class="mark">✓</span>');}
+  });
+  const fb=qEl.querySelector('.feedback');
+  if(j===item.correct){
+    score++;
+    fb.classList.add('ok','show');
+    fb.innerHTML='<b style="color:var(--green)">Certo! </b>'+item.exp;
+  }else{
+    btn.classList.add('wrong');
+    btn.insertAdjacentHTML('beforeend','<span class="mark">✕</span>');
+    fb.classList.add('no','show');
+    fb.innerHTML='<b style="color:var(--red)">Quase. </b>'+item.exp;
+  }
+  if(answered===questions.length)showScore();
+}
+
+function showScore(){
+  const bar=document.getElementById('scorebar');
+  bar.style.display='block';
+  document.getElementById('scoreval').textContent=`${score}/${questions.length}`;
+  let msg='';
+  if(score===8)msg=' 🏆 pronto pra técnica';
+  else if(score>=6)msg=' 💪 tá afiado, revisa os erros';
+  else if(score>=4)msg=' 📚 relê Conceito e Armadilhas';
+  else msg=' 🔁 dá mais uma passada geral';
+  document.getElementById('scoremsg').textContent=msg;
+  bar.scrollIntoView({behavior:'smooth',block:'center'});
+}
+</script>
+</body>
+</html>

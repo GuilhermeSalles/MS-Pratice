@@ -1,0 +1,135 @@
+/* ==========================================================================
+   Tela mobile — consome GET /bff/mobile/painel (DTO enxuto)
+
+   Escrita mobile-first: no celular ocupa a largura toda; no desktop fica
+   centralizada numa coluna estreita, do tamanho de um telefone.
+   ========================================================================== */
+
+.app {
+	position: relative;
+	z-index: 1;
+	width: min(430px, 100%);
+	margin: 0 auto;
+	min-height: 100vh;
+	padding: 22px 18px 40px;
+	display: flex;
+	flex-direction: column;
+	gap: 14px;
+}
+
+/* --- Topo ----------------------------------------------------------------- */
+
+.topo { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+
+.topo h1 {
+	margin: 0;
+	font-family: var(--display);
+	font-size: 26px;
+	font-weight: 800;
+	letter-spacing: -.03em;
+}
+
+.topo p { margin: 2px 0 0; font-family: var(--mono); font-size: 10.5px; color: var(--muted); }
+
+/* --- O cartao do lag: o unico numero grande da tela ----------------------- */
+
+.lag {
+	padding: 24px 22px;
+	text-align: center;
+	transition: border-color .3s;
+}
+
+.lag[data-alerta="true"] { border-color: rgba(255, 176, 58, .45); }
+
+.lag .numero {
+	display: block;
+	font-family: var(--display);
+	font-size: 68px;
+	font-weight: 800;
+	line-height: 1;
+	letter-spacing: -.04em;
+	font-variant-numeric: tabular-nums;
+	transition: color .3s, text-shadow .3s;
+}
+
+.lag[data-alerta="true"] .numero { color: var(--amber); text-shadow: 0 0 30px rgba(255, 176, 58, .45); }
+
+.lag .rotulo {
+	display: block;
+	margin-top: 8px;
+	font-family: var(--mono);
+	font-size: 11px;
+	letter-spacing: .1em;
+	text-transform: uppercase;
+	color: var(--muted);
+}
+
+.lag .explica { margin: 12px 0 0; font-size: 13px; color: var(--muted); }
+
+/* --- Formulario ----------------------------------------------------------- */
+
+.cartao { padding: 18px; }
+
+.cartao h2 {
+	margin: 0 0 14px;
+	font-family: var(--display);
+	font-size: 17px;
+	font-weight: 700;
+	letter-spacing: -.02em;
+}
+
+.formulario { display: flex; flex-direction: column; gap: 13px; }
+
+.formulario .botao { padding: 15px 20px; font-size: 16px; }
+
+.erro {
+	margin: 0;
+	padding: 10px 13px;
+	border-radius: 10px;
+	border: 1px solid rgba(255, 95, 126, .4);
+	background: rgba(255, 95, 126, .12);
+	color: #ffb3c2;
+	font-size: 13px;
+}
+
+/* --- Ultimas vendas ------------------------------------------------------- */
+
+.cartao header { display: flex; align-items: center; justify-content: space-between; }
+
+.rota-badge { font-family: var(--mono); font-size: 10px; color: var(--muted); }
+
+.lista { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 7px; }
+
+.venda {
+	display: flex;
+	align-items: baseline;
+	justify-content: space-between;
+	gap: 12px;
+	padding: 12px 14px;
+	border-radius: 12px;
+	border: 1px solid var(--borda);
+	background: rgba(255, 255, 255, .04);
+}
+
+.venda .produto { font-weight: 600; font-size: 15px; }
+.venda .hora { font-family: var(--mono); font-size: 10.5px; color: var(--muted); }
+
+.lista-vazia { margin: 0; font-size: 13.5px; color: var(--muted); }
+
+/* --- Simulacao e rodape --------------------------------------------------- */
+
+.simulacao { padding: 18px; }
+.simulacao p { margin: 0 0 14px; font-size: 13px; color: var(--muted); }
+.simulacao .chave { width: 100%; justify-content: center; }
+
+.rodape {
+	margin-top: auto;
+	padding-top: 12px;
+	text-align: center;
+	font-family: var(--mono);
+	font-size: 11px;
+	color: rgba(148, 141, 194, .7);
+}
+
+.rodape a { color: var(--orchid-claro); text-decoration: none; }
+.rodape a:hover { text-decoration: underline; }

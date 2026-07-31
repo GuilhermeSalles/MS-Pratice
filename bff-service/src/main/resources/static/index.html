@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Store · painel web</title>
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,700;12..96,800&family=Inter+Tight:wght@400;500;600&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+	<link rel="stylesheet" href="/css/base.css">
+	<link rel="stylesheet" href="/css/web.css">
+</head>
+<body>
+
+<div class="aurora" aria-hidden="true"><span class="violeta"></span><span class="menta"></span></div>
+
+<main class="pagina">
+
+	<header>
+		<p class="sobrenome">BFF Web · Apache Kafka</p>
+		<h1 class="titulo">Cada venda<br>vira um offset</h1>
+		<p class="chamada">
+			Esta tela fala com <strong>um backend só</strong>. O BFF gera o id, publica pelo venda-service e
+			junta numa resposta o que o broker e o estoque têm a dizer.
+		</p>
+		<div class="selos">
+			<span class="selo" id="selo-broker"><i class="ponto"></i><span>broker</span></span>
+			<span class="selo" id="selo-consumidor"><i class="ponto"></i><span>consumidor</span></span>
+			<span class="rota">GET /bff/web/painel</span>
+			<a class="trocar-tela" href="/mobile.html">ver a tela mobile →</a>
+		</div>
+	</header>
+
+	<section class="vidro vitrine">
+		<header>
+			<div>
+				<h2>O log do tópico</h2>
+				<p>Uma célula por offset. Verde é lido pelo grupo, âmbar está publicado e esperando.</p>
+			</div>
+		</header>
+
+		<div class="trilho" id="trilho">
+			<div class="celulas" id="celulas"></div>
+		</div>
+		<p class="vazio" id="vazio">O tópico está vazio. Registre a primeira venda para gravar o offset 0.</p>
+
+		<p class="legenda">
+			<span><i class="verde"></i>lidos pelo grupo</span>
+			<span><i class="laranja"></i>esperando o consumidor (lag)</span>
+		</p>
+
+		<dl class="leituras">
+			<div><dt>gravados no log</dt><dd id="n-gravados">0</dd></div>
+			<div><dt>offset do grupo</dt><dd id="n-lidos">0</dd></div>
+			<div id="bloco-lag"><dt>lag</dt><dd id="n-lag">0</dd></div>
+			<div><dt>consumidores no grupo</dt><dd id="n-consumidores">0</dd></div>
+		</dl>
+	</section>
+
+	<div class="colunas">
+
+		<section class="vidro painel">
+			<h2>Nova venda</h2>
+			<form class="formulario" id="form">
+				<label class="campo">
+					<span>Cliente</span>
+					<input id="nome" type="text" placeholder="Bruce Wayne" autocomplete="off" required>
+				</label>
+				<label class="campo">
+					<span>Produto</span>
+					<input id="produto" type="text" placeholder="Teclado mecânico" autocomplete="off" required>
+				</label>
+				<p class="auto"><b>id</b> — o BFF gera um UUID novo a cada venda. A tela nunca manda id.</p>
+				<button class="botao" type="submit" id="enviar">Registrar venda</button>
+				<p class="erro" id="erro" hidden></p>
+			</form>
+		</section>
+
+		<section class="vidro painel">
+			<header><h2>Publicadas</h2><span class="contador" id="conta-publicadas">0</span></header>
+			<p class="origem">venda-service · producer</p>
+			<ul class="lista" id="publicadas"></ul>
+			<p class="lista-vazia" id="vazio-publicadas">Nenhuma venda registrada nesta sessão.</p>
+		</section>
+
+		<section class="vidro painel">
+			<header><h2>Processadas</h2><span class="contador" id="conta-processadas">0</span></header>
+			<p class="origem">estoque-service · consumer</p>
+			<ul class="lista" id="processadas"></ul>
+			<p class="lista-vazia" id="vazio-processadas">O estoque ainda não consumiu nada.</p>
+		</section>
+
+	</div>
+
+	<section class="vidro simulacao">
+		<div>
+			<h2>Simulação de falha</h2>
+			<p id="nota">
+				Derrube o consumidor, registre algumas vendas e veja o lag crescer. Ao subir, ele lê tudo de uma vez —
+				do offset onde parou, sem repetir o que já tinha confirmado.
+			</p>
+		</div>
+		<button class="chave" id="chave" type="button" role="switch" aria-checked="true">
+			<i></i><span id="chave-rotulo">Derrubar consumidor</span>
+		</button>
+	</section>
+
+	<footer class="rodape">
+		<span>bff-service :8082</span>
+		<span>venda-service :8081</span>
+		<span>estoque-service :8080</span>
+		<a href="http://localhost:8090" target="_blank" rel="noopener">Kafka UI :8090</a>
+	</footer>
+
+</main>
+
+<div class="aviso" id="aviso" role="status" aria-live="polite" hidden></div>
+
+<script src="/js/web.js"></script>
+</body>
+</html>

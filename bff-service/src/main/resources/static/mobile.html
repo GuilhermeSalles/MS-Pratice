@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Store · painel mobile</title>
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,700;12..96,800&family=Inter+Tight:wght@400;500;600&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+	<link rel="stylesheet" href="/css/base.css">
+	<link rel="stylesheet" href="/css/mobile.css">
+</head>
+<body>
+
+<div class="aurora" aria-hidden="true"><span class="violeta"></span><span class="menta"></span></div>
+
+<main class="app">
+
+	<header class="topo">
+		<div>
+			<h1>Store</h1>
+			<p>GET /bff/mobile/painel</p>
+		</div>
+		<span class="selo" id="selo"><i class="ponto"></i><span>carregando</span></span>
+	</header>
+
+	<section class="vidro lag" id="cartao-lag">
+		<span class="numero" id="n-lag">0</span>
+		<span class="rotulo">vendas esperando o estoque</span>
+		<p class="explica" id="explica">Tudo processado. O consumidor está em dia com o tópico.</p>
+	</section>
+
+	<section class="vidro cartao">
+		<h2>Nova venda</h2>
+		<form class="formulario" id="form">
+			<label class="campo">
+				<span>Cliente</span>
+				<input id="nome" type="text" placeholder="Bruce Wayne" autocomplete="off" required>
+			</label>
+			<label class="campo">
+				<span>Produto</span>
+				<input id="produto" type="text" placeholder="Teclado mecânico" autocomplete="off" required>
+			</label>
+			<button class="botao" type="submit" id="enviar">Registrar venda</button>
+			<p class="erro" id="erro" hidden></p>
+		</form>
+	</section>
+
+	<section class="vidro cartao">
+		<header>
+			<h2>Últimas vendas</h2>
+			<span class="rota-badge">produto + hora</span>
+		</header>
+		<ul class="lista" id="vendas"></ul>
+		<p class="lista-vazia" id="vazio">Nenhuma venda ainda.</p>
+	</section>
+
+	<section class="vidro cartao simulacao">
+		<p id="nota">Derrube o consumidor e registre vendas: elas continuam sendo publicadas, e o número lá em cima cresce.</p>
+		<button class="chave" id="chave" type="button" role="switch" aria-checked="true">
+			<i></i><span id="chave-rotulo">Derrubar consumidor</span>
+		</button>
+	</section>
+
+	<footer class="rodape">
+		Esta tela recebe 3 campos. <a href="/">Ver a tela web →</a>
+	</footer>
+
+</main>
+
+<div class="aviso" id="aviso" role="status" aria-live="polite" hidden></div>
+
+<script src="/js/mobile.js"></script>
+</body>
+</html>
