@@ -454,27 +454,6 @@ O JUnit e o Mockito não aparecem no `pom.xml`: vêm transitivamente do `spring-
 | **estoque-service** | `EstoqueListenerServiceTest` | O listener processa a mensagem recebida do tópico                           |
 | **bff-service**     | `RegistroDeVendasTest`       | O BFF **gera o UUID** e publica no `venda-service` — o id nunca vem da tela |
 
-No produtor, o `KafkaTemplate` é substituído por um mock: o teste verifica o **contrato da publicação**, não a infraestrutura.
-
-```java
-@WebMvcTest(VendaController.class)
-class VendaControllerTest {
-
-    @MockitoBean
-    private KafkaTemplate<String, String> kafkaTemplate;
-
-    @Test
-    void devePublicarVendaNoTopico() throws Exception {
-        mockMvc.perform(post("/venda")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(venda))
-                .andExpect(status().isOk());
-
-        verify(kafkaTemplate).send("estoque-topic", venda);
-    }
-}
-```
-
 ---
 
 ## 🗂️ Estrutura do Repositório
