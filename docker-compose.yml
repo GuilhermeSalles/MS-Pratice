@@ -75,6 +75,25 @@ services:
     networks:
       - store-net
 
+  # Backend for Frontend: serve o painel e orquestra os dois microsservicos.
+  # E o unico backend que a tela conhece.
+  bff-service:
+    build:
+      context: ./bff-service
+    image: store/bff-service:latest
+    container_name: bff-service
+    ports:
+      - "8082:8082"
+    environment:
+      - SPRING_KAFKA_BOOTSTRAP_SERVERS=kafka:29092
+      - VENDA_SERVICE_URL=http://venda-service:8081
+      - ESTOQUE_SERVICE_URL=http://estoque-service:8080
+    depends_on:
+      kafka:
+        condition: service_healthy
+    networks:
+      - store-net
+
 volumes:
   kafka-data:
 

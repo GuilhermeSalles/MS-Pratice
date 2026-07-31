@@ -4,6 +4,13 @@
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<title>Store · painel web</title>
+	<script>
+		// Celular cai direto na tela mobile. Roda antes do CSS carregar, entao
+		// nao ha piscada. O link "ver a tela web" manda ?web e pula o desvio.
+		if (!location.search.includes('web') && window.matchMedia('(max-width: 700px)').matches) {
+			location.replace('/mobile.html');
+		}
+	</script>
 	<link rel="preconnect" href="https://fonts.googleapis.com">
 	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 	<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,700;12..96,800&family=Inter+Tight:wght@400;500;600&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">

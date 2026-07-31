@@ -1,5 +1,6 @@
 package com.store.estoque_service.service;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.ByteArrayOutputStream;
@@ -17,6 +18,7 @@ class EstoqueListenerServiceTest {
 	@Test
 	void deveConsumirVendaRecebida() {
 		String venda = "{\"id\":\"1\",\"produto\":\"Teclado\"}";
+		MemoriaEstoque memoria = new MemoriaEstoque();
 
 		// Captura o que a aplicacao escreve no console
 		PrintStream consoleOriginal = System.out;
@@ -24,11 +26,15 @@ class EstoqueListenerServiceTest {
 		System.setOut(new PrintStream(saida));
 
 		try {
-			new EstoqueListenerService().consumirVenda(venda);
+			new EstoqueListenerService(memoria).consumirVenda(venda);
 		} finally {
 			System.setOut(consoleOriginal);
 		}
 
 		assertTrue(saida.toString().contains("### Venda recebida no estoque: " + venda));
+
+		// E o evento fica disponivel para o painel do bff-service
+		assertEquals(1, memoria.listar().size());
+		assertEquals("Teclado", memoria.listar().get(0).produto());
 	}
 }
