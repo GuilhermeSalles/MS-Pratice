@@ -294,10 +294,22 @@ Disponível em **http://localhost:8090** — use _Topics → estoque-topic → M
 
 Duas telas, servidas pelo mesmo serviço na porta `8082`:
 
-| Tela       | URL                             | BFF que ela consome  |
-| ---------- | ------------------------------- | -------------------- |
-| **Web**    | `http://localhost:8082`         | `/bff/web/painel`    |
+| Tela       | URL                                 | BFF que ela consome  |
+| ---------- | ----------------------------------- | -------------------- |
+| **Web**    | `http://localhost:8082`             | `/bff/web/painel`    |
 | **Mobile** | `http://localhost:8082/mobile.html` | `/bff/mobile/painel` |
+
+Abrindo a raiz num celular, o desvio para a tela mobile é automático — três linhas no `<head>` do `index.html`, antes de o CSS carregar, então não há piscada:
+
+```js
+if (!location.search.includes('web') && window.matchMedia('(max-width: 700px)').matches) {
+    location.replace('/mobile.html');
+}
+```
+
+Cada tela tem um link para a outra, para conseguir ver as duas de qualquer aparelho. O link do mobile aponta para `/?web`, que pula o desvio — e, como usa `location.replace`, o botão voltar do navegador não fica preso num vai e volta.
+
+> Para abrir do celular na mesma rede, troque `localhost` pelo IP da máquina (ex.: `http://192.168.0.10:8082`).
 
 ### Por que um BFF por tela
 
